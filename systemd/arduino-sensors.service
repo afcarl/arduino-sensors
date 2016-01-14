@@ -1,0 +1,13 @@
+[Unit]
+Description=Arduino Sensor monitoring service
+Wants=zabbix-server.service
+After=zabbix-server.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /var/lib/zabbix/scripts/arduino_monitor.py --host %H
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
