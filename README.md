@@ -59,3 +59,7 @@ Reload, enable and start:
     systemctl daemon-reload
     systemctl enable arduino-sensors.service
     systemctl start arduino-sensors.service
+
+Enjoy:
+
+![Zabbix Screenshot](screenshot.jpg)
