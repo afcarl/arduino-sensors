@@ -61,7 +61,8 @@ if args.host:
         sys.exit(2)
 
 # Read from serial forever
-while True:
+error_count = 0
+while error_count < 10:
 
     # Try and parse a line
     data = serial.readline()
@@ -76,10 +77,10 @@ while True:
     else:
 
         # Write temperature/humidity data to stderr
-        log.info("Read %s: %s%%", args.humidity_item, hum)
-        log.info("Read %s: %s°C", args.temperature_item, temp)
+        log.info("%s=%s°C, %s=%s%%", args.temperature_item, temp, args.humidity_item, hum)
 
-        # Send to Zabbix, if --host is present
+        # Send to Zabbix if --host is present. Increment error_count if an
+        # exception is raised, otherwise reset it.
         if args.host:
             try:
                 sender.send([
@@ -88,3 +89,9 @@ while True:
                 ])
             except:
                 log.exception("Cannot send metric to Zabbix")
+                error_count += 1
+            else:
+                error_count = 0
+
+# If we got there, too many errors happened.
+log.error("Too many errors, exiting.")
