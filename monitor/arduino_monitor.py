@@ -62,7 +62,8 @@ if args.host:
 
 # Read from serial forever
 error_count = 0
-while error_count < 10:
+max_errors = 10
+while error_count < max_errors:
 
     # Try and parse a line
     data = serial.readline()
@@ -88,7 +89,9 @@ while error_count < 10:
                     ZabbixMetric(args.host, args.temperature_item, str(temp)),
                 ])
             except:
-                log.exception("Cannot send metric to Zabbix")
+                log.exception(
+                    "Cannot send metric to Zabbix (%d/%d)",
+                    error_count, max_errors)
                 error_count += 1
             else:
                 error_count = 0
