@@ -81,7 +81,10 @@ while True:
 
         # Send to Zabbix, if --host is present
         if args.host:
-            sender.send([
-                ZabbixMetric(args.host, args.humidity_item, str(hum)),
-                ZabbixMetric(args.host, args.temperature_item, str(temp)),
-            ])
+            try:
+                sender.send([
+                    ZabbixMetric(args.host, args.humidity_item, str(hum)),
+                    ZabbixMetric(args.host, args.temperature_item, str(temp)),
+                ])
+            except:
+                log.exception("Cannot send metric to Zabbix")
